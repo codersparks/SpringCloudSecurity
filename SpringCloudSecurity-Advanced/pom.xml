@@ -19,6 +19,7 @@
         <module>auth-center</module>
         <module>backend-service</module>
         <module>common</module>
+        <module>discovery</module>
     </modules>
 
     <properties>
@@ -26,6 +27,7 @@
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <docker.image.prefix>codersparks</docker.image.prefix>
     </properties>
 
     <dependencyManagement>
@@ -46,6 +48,13 @@
                 <groupId>shuaicj.example.security</groupId>
                 <artifactId>common</artifactId>
                 <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>Edgware.SR6</version>
+                <type>pom</type>
+                <scope>import</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>
