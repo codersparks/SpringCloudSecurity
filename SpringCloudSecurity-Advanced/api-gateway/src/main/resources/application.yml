@@ -1,5 +1,18 @@
 server:
   port: 8080
+  tomcat:
+    accesslog:
+      enabled: true
+      directory: /dev
+      prefix: stdout
+      buffered: false
+      suffix: ""
+      file-date-format: ""
+
+
+logging:
+  level:
+    raj: DEBUG
 
 zuul:
   routes:

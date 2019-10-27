@@ -14,6 +14,8 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.Getter;
 import lombok.Setter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -30,6 +32,8 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
  */
 public class JwtUsernamePasswordAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
 
+    private static final Logger logger = LoggerFactory.getLogger(JwtUsernamePasswordAuthenticationFilter.class);
+
     private final JwtAuthenticationConfig config;
     private final ObjectMapper mapper;
 
@@ -44,9 +48,11 @@ public class JwtUsernamePasswordAuthenticationFilter extends AbstractAuthenticat
     public Authentication attemptAuthentication(HttpServletRequest req, HttpServletResponse rsp)
             throws AuthenticationException, IOException {
         User u = mapper.readValue(req.getInputStream(), User.class);
+        logger.debug("Got user details for: {}", u.username);
         return getAuthenticationManager().authenticate(new UsernamePasswordAuthenticationToken(
                 u.getUsername(), u.getPassword(), Collections.emptyList()
         ));
+
     }
 
     @Override
@@ -61,6 +67,7 @@ public class JwtUsernamePasswordAuthenticationFilter extends AbstractAuthenticat
                 .setExpiration(Date.from(now.plusSeconds(config.getExpiration())))
                 .signWith(SignatureAlgorithm.HS256, config.getSecret().getBytes())
                 .compact();
+        logger.debug("Generated header token: {}", token);
         rsp.addHeader(config.getHeader(), config.getPrefix() + " " + token);
     }
 

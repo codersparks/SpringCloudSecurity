@@ -10,6 +10,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -22,6 +24,8 @@ import org.springframework.web.filter.OncePerRequestFilter;
  */
 public class JwtTokenAuthenticationFilter extends OncePerRequestFilter {
 
+    private static final Logger logger = LoggerFactory.getLogger(JwtTokenAuthenticationFilter.class);
+
     private final JwtAuthenticationConfig config;
 
     public JwtTokenAuthenticationFilter(JwtAuthenticationConfig config) {
@@ -32,6 +36,7 @@ public class JwtTokenAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest req, HttpServletResponse rsp, FilterChain filterChain)
             throws ServletException, IOException {
         String token = req.getHeader(config.getHeader());
+        logger.debug("Received authentication token: {}", token);
         if (token != null && token.startsWith(config.getPrefix() + " ")) {
             token = token.replace(config.getPrefix() + " ", "");
             try {
@@ -40,8 +45,10 @@ public class JwtTokenAuthenticationFilter extends OncePerRequestFilter {
                         .parseClaimsJws(token)
                         .getBody();
                 String username = claims.getSubject();
+                logger.debug("Username extracted: {}", username);
                 @SuppressWarnings("unchecked")
                 List<String> authorities = claims.get("authorities", List.class);
+                logger.debug("Authorities: {}", authorities);
                 if (username != null) {
                     UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(username, null,
                             authorities.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()));

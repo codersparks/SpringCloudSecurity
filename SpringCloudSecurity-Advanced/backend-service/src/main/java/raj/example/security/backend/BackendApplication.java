@@ -9,10 +9,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @author bharat
  */
 @SpringBootApplication
-public class Application {
+public class BackendApplication {
 
     public static void main(String[] args) {
 
-        SpringApplication.run(Application.class, args);
+        SpringApplication.run(BackendApplication.class, args);
     }
 }

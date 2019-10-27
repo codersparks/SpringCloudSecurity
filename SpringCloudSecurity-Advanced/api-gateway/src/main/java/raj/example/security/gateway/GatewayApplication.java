@@ -1,7 +1,8 @@
-package raj.example.security.auth;
+package raj.example.security.gateway;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.netflix.zuul.EnableZuulProxy;
 
 /**
  * Spring boot app.
@@ -9,10 +10,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @author bharat
  */
 @SpringBootApplication
-public class Application {
+@EnableZuulProxy
+public class GatewayApplication {
 
     public static void main(String[] args) {
 
-        SpringApplication.run(Application.class, args);
+        SpringApplication.run(GatewayApplication.class, args);
     }
 }
